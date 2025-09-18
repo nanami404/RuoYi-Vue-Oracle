@@ -4,115 +4,97 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 /**
- * Entity基类
- * 
- * @author ruoyi
+ * 实体基类
+ * 提供通用的实体字段和功能，包括创建时间、更新时间、备注等基础字段
+ * 所有业务实体类都应继承此基类以获得统一的基础功能
+ *
+ * @author more
+ * @since 2025-01-19
+ * @version 1.0
  */
-public class BaseEntity implements Serializable
-{
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class BaseEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
-    /** 搜索值 */
+    // ========== 查询相关字段 ==========
+
+    /**
+     * 搜索值
+     * 用于前端传递搜索关键字，不参与JSON序列化
+     */
     @JsonIgnore
     private String searchValue;
 
-    /** 创建者 */
+    // ========== 审计字段 ==========
+
+    /**
+     * 创建者
+     * 记录数据创建人的用户名或用户ID
+     */
     private String createBy;
 
-    /** 创建时间 */
+    /**
+     * 创建时间
+     * 记录数据的创建时间，格式为 yyyy-MM-dd HH:mm:ss
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    /** 更新者 */
+    /**
+     * 更新者
+     * 记录数据最后更新人的用户名或用户ID
+     */
     private String updateBy;
 
-    /** 更新时间 */
+    /**
+     * 更新时间
+     * 记录数据的最后更新时间，格式为 yyyy-MM-dd HH:mm:ss
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    /** 备注 */
+    // ========== 扩展字段 ==========
+
+    /**
+     * 备注
+     * 用于存储额外的说明信息
+     */
     private String remark;
 
-    /** 请求参数 */
+    /**
+     * 请求参数
+     * 用于存储前端传递的额外参数，只有非空时才参与JSON序列化
+     */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
 
-    public String getSearchValue()
-    {
-        return searchValue;
-    }
+    // ========== 自定义方法 ==========
 
-    public void setSearchValue(String searchValue)
-    {
-        this.searchValue = searchValue;
-    }
-
-    public String getCreateBy()
-    {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy)
-    {
-        this.createBy = createBy;
-    }
-
-    public Date getCreateTime()
-    {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime)
-    {
-        this.createTime = createTime;
-    }
-
-    public String getUpdateBy()
-    {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy)
-    {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime()
-    {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime)
-    {
-        this.updateTime = updateTime;
-    }
-
-    public String getRemark()
-    {
-        return remark;
-    }
-
-    public void setRemark(String remark)
-    {
-        this.remark = remark;
-    }
-
-    public Map<String, Object> getParams()
-    {
-        if (params == null)
-        {
+    /**
+     * 获取请求参数Map
+     * 如果params为null，则初始化为空的HashMap
+     *
+     * @return 请求参数Map，永不为null
+     */
+    public Map<String, Object> getParams() {
+        if (params == null) {
             params = new HashMap<>();
         }
         return params;
-    }
-
-    public void setParams(Map<String, Object> params)
-    {
-        this.params = params;
     }
 }

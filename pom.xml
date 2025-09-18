@@ -9,14 +9,14 @@
     <packaging>jar</packaging>
 
     <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
+    <url>https://www.ruoyi.vip</url>
+    <description>助手管理系统</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.5.15</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <properties>
@@ -25,6 +25,8 @@
         <java.version>1.8</java.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <pagehelper.spring.boot.starter.version>1.4.7</pagehelper.spring.boot.starter.version>
+        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <mysql.version>8.0.33</mysql.version>
         <fastjson.version>2.0.58</fastjson.version>
         <druid.version>1.2.23</druid.version>
         <commons.io.version>2.19.0</commons.io.version>
@@ -36,6 +38,8 @@
         <oshi.version>6.8.3</oshi.version>
         <velocity.version>2.3</velocity.version>
         <oracle.version>12.2.0.1</oracle.version>
+        <lombok.version>1.18.34</lombok.version>
+        <p3c-pmd.version>2.1.1</p3c-pmd.version>
         <!-- override dependency version -->
         <tomcat.version>9.0.108</tomcat.version>
         <logback.version>1.2.13</logback.version>
@@ -70,11 +74,31 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- OkHttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+
+        <!-- Spring Retry -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+
         <!-- spring-boot-devtools -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional> <!-- 表示依赖不会传递 -->
+        </dependency>
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring security 安全认证 -->
@@ -93,6 +117,20 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <!-- MyBatis-Plus Spring Boot Starter -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <!-- MySQL驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
         </dependency>
 
         <!-- oracle驱动-->
@@ -234,45 +272,64 @@
             </exclusions>
         </dependency>
 
-	</dependencies>
+    </dependencies>
 
-	<build>
-	    <finalName>${project.artifactId}</finalName>
-	    <plugins>
-	        <plugin>
-	            <groupId>org.springframework.boot</groupId>
-	            <artifactId>spring-boot-maven-plugin</artifactId>
-	            <configuration>
-	                <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
-	            </configuration>
-	        </plugin>
-	    </plugins>
-	</build>
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+                </configuration>
+            </plugin>
 
-	<repositories>
-	    <!--阿里云镜像仓库-->
-	    <repository>
-	        <id>public</id>
-	        <name>aliyun nexus</name>
-	        <url>https://maven.aliyun.com/repository/public</url>
-	        <releases>
-	            <enabled>true</enabled>
-	        </releases>
-	    </repository>
-	</repositories>
+            <!-- Maven编译插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <!-- Lombok注解处理器配置 -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<pluginRepositories>
-	    <pluginRepository>
-	        <id>public</id>
-	        <name>aliyun nexus</name>
-	        <url>https://maven.aliyun.com/repository/public</url>
-	        <releases>
-	            <enabled>true</enabled>
-	        </releases>
-	        <snapshots>
-	            <enabled>false</enabled>
-	        </snapshots>
-	    </pluginRepository>
-	</pluginRepositories>
+    <repositories>
+        <!--阿里云镜像仓库-->
+        <repository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

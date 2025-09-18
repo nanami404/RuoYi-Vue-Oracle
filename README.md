@@ -11,16 +11,246 @@
 
 ## 平台简介
 
-* 本仓库为RuoYi-Vue的Oracle版本，保持同步更新。
+* 本仓库为RuoYi-Vue的达梦数据库(DM8)版本，保持同步更新。
 * 配套前端代码地址[RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue/tree/master/ruoyi-ui)，技术栈（[Vue2](https://cn.vuejs.org) + [Element](https://github.com/ElemeFE/element) + [Vue CLI](https://cli.vuejs.org/zh)）。
 * 配套前端代码地址[RuoYi-Vue3](https://gitcode.com/yangzongzhuan/RuoYi-Vue3)，技术栈（[Vue3](https://v3.cn.vuejs.org) + [Element Plus](https://element-plus.org/zh-CN) + [Vite](https://cn.vitejs.dev)）。
 * 前端采用Vue、Element UI。
 * 后端采用Spring Boot、Spring Security、Redis & Jwt。
+* 数据库采用国产达梦数据库(DM8)，支持国产化部署。
+* 持久层框架采用MyBatis-Plus，提供强大的CRUD操作和代码生成能力。
+* 开发效率工具集成Lombok，简化Java代码编写。
 * 权限认证使用Jwt，支持多终端认证系统。
 * 支持加载动态权限菜单，多方式轻松权限控制。
 * 高效率开发，使用代码生成器可以一键生成前后端代码。
 * 不分离版本，请移步[RuoYi](https://gitee.com/y_project/RuoYi)，微服务版本，请移步[RuoYi-Cloud](https://gitee.com/y_project/RuoYi-Cloud)
 * 阿里云折扣场：[点我进入](http://aly.ruoyi.vip)，腾讯云秒杀场：[点我进入](http://txy.ruoyi.vip)&nbsp;&nbsp;
+
+## 技术选型
+
+### 后端技术
+
+| 技术 | 说明 | 官网 |
+| --- | --- | --- |
+| Spring Boot | 容器+MVC框架 | [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot) |
+| Spring Security | 认证和授权框架 | [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security) |
+| MyBatis-Plus | ORM框架 | [https://mp.baomidou.com](https://mp.baomidou.com) |
+| 达梦数据库(DM8) | 国产关系型数据库 | [https://www.dameng.com](https://www.dameng.com) |
+| Redis | 分布式缓存 | [https://redis.io](https://redis.io) |
+| Lombok | 简化对象封装工具 | [https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok) |
+| JWT | JWT登录支持 | [https://github.com/jwtk/jjwt](https://github.com/jwtk/jjwt) |
+| Druid | 数据库连接池 | [https://github.com/alibaba/druid](https://github.com/alibaba/druid) |
+
+### 前端技术
+
+| 技术 | 说明 | 官网 |
+| --- | --- | --- |
+| Vue | 前端框架 | [https://vuejs.org](https://vuejs.org) |
+| Element-ui | 前端UI框架 | [https://element.eleme.io](https://element.eleme.io) |
+| Axios | 前端HTTP框架 | [https://github.com/axios/axios](https://github.com/axios/axios) |
+
+## 达梦数据库(DM8)配置
+
+### 数据库连接配置
+
+```yaml
+# application-druid.yml
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: dm.jdbc.driver.DmDriver
+    druid:
+      # 达梦数据库连接
+      url: jdbc:dm://localhost:5236/DAMENG?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=GMT%2B8
+      username: SYSDBA
+      password: SYSDBA
+```
+
+### 达梦数据库特性支持
+
+* **国产化支持**：完全自主可控的国产数据库
+* **高性能**：支持大并发、大数据量处理
+* **高可用**：支持集群部署和读写分离
+* **兼容性**：良好的SQL标准兼容性
+* **安全性**：提供完善的数据安全保护机制
+
+### 数据库初始化
+
+1. 安装达梦数据库DM8
+2. 创建数据库实例
+3. 执行初始化脚本：`sql/ry_20250522.sql`
+4. 执行定时任务脚本：`sql/quartz.sql`
+
+## MyBatis-Plus集成
+
+### Maven依赖配置
+
+```xml
+<!-- MyBatis-Plus -->
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-boot-starter</artifactId>
+    <version>3.5.7</version>
+</dependency>
+
+<!-- MyBatis-Plus代码生成器 -->
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-generator</artifactId>
+    <version>3.5.7</version>
+</dependency>
+```
+
+### 配置文件
+
+```yaml
+# MyBatis-Plus配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.ruoyi.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+  configuration:
+    # 驼峰下划线转换
+    map-underscore-to-camel-case: true
+    # 缓存配置
+    cache-enabled: false
+  global-config:
+    # 数据库相关配置
+    db-config:
+      # 主键类型
+      id-type: ASSIGN_ID
+      # 字段策略
+      field-strategy: NOT_EMPTY
+      # 逻辑删除配置
+      logic-delete-field: del_flag
+      logic-delete-value: 2
+      logic-not-delete-value: 0
+```
+
+### 使用示例
+
+```java
+// 实体类
+@Data
+@TableName("sys_user")
+public class SysUser extends BaseEntity {
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Long userId;
+    
+    private String userName;
+    
+    private String nickName;
+    
+    @TableLogic
+    private String delFlag;
+}
+
+// Mapper接口
+@Mapper
+public interface SysUserMapper extends BaseMapper<SysUser> {
+    // 继承BaseMapper，自动拥有CRUD方法
+}
+
+// Service层
+@Service
+public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
+    // 继承ServiceImpl，自动拥有CRUD方法
+}
+```
+
+## Lombok集成
+
+### Maven依赖配置
+
+```xml
+<!-- Lombok -->
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.34</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+### 常用注解说明
+
+| 注解 | 说明 |
+| --- | --- |
+| @Data | 生成getter/setter/toString/equals/hashCode方法 |
+| @Getter/@Setter | 生成getter/setter方法 |
+| @ToString | 生成toString方法 |
+| @EqualsAndHashCode | 生成equals和hashCode方法 |
+| @NoArgsConstructor | 生成无参构造函数 |
+| @AllArgsConstructor | 生成全参构造函数 |
+| @Builder | 生成建造者模式代码 |
+| @Slf4j | 生成日志对象 |
+
+### 使用示例
+
+```java
+/**
+ * 用户实体类
+ *
+ * @author more
+ * @since 2025-01-19
+ * @version 1.0
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@TableName("sys_user")
+public class SysUser extends BaseEntity {
+    
+    /** 用户ID */
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Long userId;
+    
+    /** 用户账号 */
+    private String userName;
+    
+    /** 用户昵称 */
+    private String nickName;
+    
+    /** 用户邮箱 */
+    private String email;
+    
+    /** 手机号码 */
+    private String phonenumber;
+    
+    /** 用户性别 */
+    private String sex;
+    
+    /** 删除标志 */
+    @TableLogic
+    private String delFlag;
+}
+
+/**
+ * 用户服务实现类
+ *
+ * @author more
+ * @since 2025-01-19
+ * @version 1.0
+ */
+@Slf4j
+@Service
+public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
+    
+    /**
+     * 查询用户信息
+     *
+     * @param userId 用户ID
+     * @return 用户信息
+     */
+    public SysUser selectUserById(Long userId) {
+        log.info("查询用户信息，用户ID：{}", userId);
+        return this.getById(userId);
+    }
+}
+```
 
 ## 内置功能
 
