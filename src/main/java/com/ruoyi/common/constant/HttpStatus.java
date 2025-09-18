@@ -1,12 +1,23 @@
 package com.ruoyi.common.constant;
 
+import lombok.experimental.UtilityClass;
+
 /**
- * 返回状态码
- * 
- * @author ruoyi
+ * HTTP状态码常量类
+ * <p>
+ * 定义了系统中使用的各种HTTP状态码常量
+ * 包括成功、重定向、客户端错误、服务器错误等状态码
+ * </p>
+ *
+ * @author more
+ * @since 2024-01-01
+ * @version 1.0
  */
-public class HttpStatus
-{
+@UtilityClass
+public class HttpStatus {
+
+    // ==================== 成功状态码 2xx ====================
+
     /**
      * 操作成功
      */
@@ -27,6 +38,8 @@ public class HttpStatus
      */
     public static final int NO_CONTENT = 204;
 
+    // ==================== 重定向状态码 3xx ====================
+
     /**
      * 资源已被移除
      */
@@ -41,6 +54,8 @@ public class HttpStatus
      * 资源没有被修改
      */
     public static final int NOT_MODIFIED = 304;
+
+    // ==================== 客户端错误状态码 4xx ====================
 
     /**
      * 参数列表错误（缺少，格式不匹配）
@@ -63,7 +78,7 @@ public class HttpStatus
     public static final int NOT_FOUND = 404;
 
     /**
-     * 不允许的http方法
+     * 不允许的HTTP方法
      */
     public static final int BAD_METHOD = 405;
 
@@ -77,6 +92,8 @@ public class HttpStatus
      */
     public static final int UNSUPPORTED_TYPE = 415;
 
+    // ==================== 服务器错误状态码 5xx ====================
+
     /**
      * 系统内部错误
      */
@@ -86,6 +103,8 @@ public class HttpStatus
      * 接口未实现
      */
     public static final int NOT_IMPLEMENTED = 501;
+
+    // ==================== 自定义状态码 6xx ====================
 
     /**
      * 系统警告消息

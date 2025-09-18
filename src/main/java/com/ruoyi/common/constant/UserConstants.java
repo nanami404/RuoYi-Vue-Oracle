@@ -1,16 +1,28 @@
 package com.ruoyi.common.constant;
 
+import lombok.experimental.UtilityClass;
+
 /**
- * 用户常量信息
+ * 用户常量信息类
  * 
- * @author ruoyi
+ * 定义用户、角色、部门、菜单等相关的所有常量，包括状态标识、
+ * 类型定义、组件标识、长度限制等配置信息
+ *
+ * @author more
+ * @since 2024-01-01
+ * @version 1.0
  */
-public class UserConstants
-{
+@UtilityClass
+public class UserConstants {
+
+    // ======================== 系统用户标识 ========================
+
     /**
      * 平台内系统用户的唯一标志
      */
     public static final String SYS_USER = "SYS_USER";
+
+    // ======================== 通用状态 ========================
 
     /** 正常状态 */
     public static final String NORMAL = "0";
@@ -18,8 +30,15 @@ public class UserConstants
     /** 异常状态 */
     public static final String EXCEPTION = "1";
 
+    /** 是否为系统默认（是） */
+    public static final String YES = "Y";
+
+    // ======================== 用户状态 ========================
+
     /** 用户封禁状态 */
     public static final String USER_DISABLE = "1";
+
+    // ======================== 角色状态 ========================
 
     /** 角色正常状态 */
     public static final String ROLE_NORMAL = "0";
@@ -27,17 +46,20 @@ public class UserConstants
     /** 角色封禁状态 */
     public static final String ROLE_DISABLE = "1";
 
+    // ======================== 部门状态 ========================
+
     /** 部门正常状态 */
     public static final String DEPT_NORMAL = "0";
 
     /** 部门停用状态 */
     public static final String DEPT_DISABLE = "1";
 
+    // ======================== 字典状态 ========================
+
     /** 字典正常状态 */
     public static final String DICT_NORMAL = "0";
 
-    /** 是否为系统默认（是） */
-    public static final String YES = "Y";
+    // ======================== 菜单配置 ========================
 
     /** 是否菜单外链（是） */
     public static final String YES_FRAME = "0";
@@ -54,18 +76,24 @@ public class UserConstants
     /** 菜单类型（按钮） */
     public static final String TYPE_BUTTON = "F";
 
+    // ======================== 组件标识 ========================
+
     /** Layout组件标识 */
-    public final static String LAYOUT = "Layout";
-    
+    public static final String LAYOUT = "Layout";
+
     /** ParentView组件标识 */
-    public final static String PARENT_VIEW = "ParentView";
+    public static final String PARENT_VIEW = "ParentView";
 
     /** InnerLink组件标识 */
-    public final static String INNER_LINK = "InnerLink";
+    public static final String INNER_LINK = "InnerLink";
+
+    // ======================== 唯一性校验 ========================
 
     /** 校验是否唯一的返回标识 */
-    public final static boolean UNIQUE = true;
-    public final static boolean NOT_UNIQUE = false;
+    public static final boolean UNIQUE = true;
+    public static final boolean NOT_UNIQUE = false;
+
+    // ======================== 长度限制 ========================
 
     /**
      * 用户名长度限制
