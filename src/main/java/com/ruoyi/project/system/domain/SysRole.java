@@ -4,8 +4,10 @@ import java.util.Set;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel.ColumnType;
 import com.ruoyi.framework.web.domain.BaseEntity;
@@ -14,7 +16,12 @@ import com.ruoyi.framework.web.domain.BaseEntity;
  * 角色表 sys_role
  * 
  * @author ruoyi
+ * @since 2025-01-19
+ * @version 1.0
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysRole extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -25,14 +32,19 @@ public class SysRole extends BaseEntity
 
     /** 角色名称 */
     @Excel(name = "角色名称")
+    @NotBlank(message = "角色名称不能为空")
+    @Size(min = 0, max = 30, message = "角色名称长度不能超过30个字符")
     private String roleName;
 
     /** 角色权限 */
     @Excel(name = "角色权限")
+    @NotBlank(message = "权限字符不能为空")
+    @Size(min = 0, max = 100, message = "权限字符长度不能超过100个字符")
     private String roleKey;
 
     /** 角色排序 */
     @Excel(name = "角色排序")
+    @NotNull(message = "显示顺序不能为空")
     private Integer roleSort;
 
     /** 数据范围（1：所有数据权限；2：自定义数据权限；3：本部门数据权限；4：本部门及以下数据权限；5：仅本人数据权限） */
@@ -64,178 +76,34 @@ public class SysRole extends BaseEntity
     /** 角色菜单权限 */
     private Set<String> permissions;
 
-    public SysRole()
-    {
-
-    }
-
+    /**
+     * 构造函数 - 根据角色ID创建角色对象
+     *
+     * @param roleId 角色ID
+     */
     public SysRole(Long roleId)
     {
         this.roleId = roleId;
     }
 
-    public Long getRoleId()
-    {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId)
-    {
-        this.roleId = roleId;
-    }
-
+    /**
+     * 判断当前角色是否为管理员角色
+     *
+     * @return true-是管理员角色，false-不是管理员角色
+     */
     public boolean isAdmin()
     {
         return isAdmin(this.roleId);
     }
 
+    /**
+     * 判断指定角色ID是否为管理员角色
+     *
+     * @param roleId 角色ID
+     * @return true-是管理员角色，false-不是管理员角色
+     */
     public static boolean isAdmin(Long roleId)
     {
         return roleId != null && 1L == roleId;
-    }
-
-    @NotBlank(message = "角色名称不能为空")
-    @Size(min = 0, max = 30, message = "角色名称长度不能超过30个字符")
-    public String getRoleName()
-    {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName)
-    {
-        this.roleName = roleName;
-    }
-
-    @NotBlank(message = "权限字符不能为空")
-    @Size(min = 0, max = 100, message = "权限字符长度不能超过100个字符")
-    public String getRoleKey()
-    {
-        return roleKey;
-    }
-
-    public void setRoleKey(String roleKey)
-    {
-        this.roleKey = roleKey;
-    }
-
-    @NotNull(message = "显示顺序不能为空")
-    public Integer getRoleSort()
-    {
-        return roleSort;
-    }
-
-    public void setRoleSort(Integer roleSort)
-    {
-        this.roleSort = roleSort;
-    }
-
-    public String getDataScope()
-    {
-        return dataScope;
-    }
-
-    public void setDataScope(String dataScope)
-    {
-        this.dataScope = dataScope;
-    }
-
-    public boolean isMenuCheckStrictly()
-    {
-        return menuCheckStrictly;
-    }
-
-    public void setMenuCheckStrictly(boolean menuCheckStrictly)
-    {
-        this.menuCheckStrictly = menuCheckStrictly;
-    }
-
-    public boolean isDeptCheckStrictly()
-    {
-        return deptCheckStrictly;
-    }
-
-    public void setDeptCheckStrictly(boolean deptCheckStrictly)
-    {
-        this.deptCheckStrictly = deptCheckStrictly;
-    }
-
-    public String getStatus()
-    {
-        return status;
-    }
-
-    public void setStatus(String status)
-    {
-        this.status = status;
-    }
-
-    public String getDelFlag()
-    {
-        return delFlag;
-    }
-
-    public void setDelFlag(String delFlag)
-    {
-        this.delFlag = delFlag;
-    }
-
-    public boolean isFlag()
-    {
-        return flag;
-    }
-
-    public void setFlag(boolean flag)
-    {
-        this.flag = flag;
-    }
-
-    public Long[] getMenuIds()
-    {
-        return menuIds;
-    }
-
-    public void setMenuIds(Long[] menuIds)
-    {
-        this.menuIds = menuIds;
-    }
-
-    public Long[] getDeptIds()
-    {
-        return deptIds;
-    }
-
-    public void setDeptIds(Long[] deptIds)
-    {
-        this.deptIds = deptIds;
-    }
-
-    public Set<String> getPermissions()
-    {
-        return permissions;
-    }
-
-    public void setPermissions(Set<String> permissions)
-    {
-        this.permissions = permissions;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("roleId", getRoleId())
-            .append("roleName", getRoleName())
-            .append("roleKey", getRoleKey())
-            .append("roleSort", getRoleSort())
-            .append("dataScope", getDataScope())
-            .append("menuCheckStrictly", isMenuCheckStrictly())
-            .append("deptCheckStrictly", isDeptCheckStrictly())
-            .append("status", getStatus())
-            .append("delFlag", getDelFlag())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
     }
 }
